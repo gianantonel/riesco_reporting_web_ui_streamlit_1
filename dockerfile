@@ -16,4 +16,4 @@ EXPOSE 8501
 
 # Comando para ejecutar la app
 # Ajusta "app.py" al nombre de tu archivo principal
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app_v1.py", "--server.port=8501", "--server.address=0.0.0.0"]
