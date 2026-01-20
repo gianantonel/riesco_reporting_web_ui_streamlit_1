@@ -10,9 +10,9 @@ import streamlit as st
 # =========================
 MODO_PRODUCCION = True  # <- cambialo a True para PROD
 
-WEBHOOK_DEV = "https://n8n.optimizar-ia.com/webhook-test/reporte_riesco"
+WEBHOOK_DEV = "http-ia.com/webhook-test/reporte_riesco"
 # Seteá N8N_WEBHOOK_PROD en tu entorno o reemplazá el placeholder.
-WEBHOOK_PROD = "https://n8n.optimizar-ia.com/webhook/reporte_riesco"
+WEBHOOK_PROD = "https://n8n.optimizar-ia.com/webhook/reporte_riesco26"
 TIMEOUT_S = int(os.getenv("TIMEOUT_S", "300"))  # 5 min por defecto
 
 # =========================
