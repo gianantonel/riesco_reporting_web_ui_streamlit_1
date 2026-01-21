@@ -111,7 +111,6 @@ REPORTS = [
     "Generar reporte de DD.JJ. de Ingresos Brutos",
     "Generar reporte de Pagos a Profesionales",
     "Generar reporte de VEP de Sueldos",
-    "Demo",
 ]
 
 if "last_result" not in st.session_state:
