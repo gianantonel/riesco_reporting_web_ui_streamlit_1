@@ -37,7 +37,7 @@ def find_logo_path(folder: str = "logo") -> str | None:
     return matches[0] if matches else None
 
 
-def post_to_n8n(report_name: str) -> dict:
+def post_to_n8n(report_name: str, webhook_url: str = None) -> dict:
     """
     Modo SYNC: hace POST al webhook y espera la respuesta final del workflow (Respond to Webhook).
     n8n debería responder JSON del estilo:
@@ -50,7 +50,8 @@ def post_to_n8n(report_name: str) -> dict:
         "modo_produccion": MODO_PRODUCCION,
     }
 
-    r = requests.post(get_webhook_url(), json=payload, timeout=TIMEOUT_S)
+    url = webhook_url if webhook_url else get_webhook_url()
+    r = requests.post(url, json=payload, timeout=TIMEOUT_S)
     try:
         data = r.json()
     except Exception:
@@ -107,11 +108,11 @@ st.divider()
 
 # Botones centrados
 REPORTS = [
-    "Generar reporte de DD.JJ. de IVA",
-    "Generar reporte de DD.JJ. de Ingresos Brutos",
-    "Generar reporte de Pagos a Profesionales",
-    "Generar reporte de VEP de Sueldos",
-    "Demo",
+    {"label": "Generar reporte de DD.JJ. de IVA",           "webhook": "https://n8n.optimizar-ia.com/webhook/iva_riesco",                  "report_name": "IVA"},
+    {"label": "Generar reporte de DD.JJ. de Ingresos Brutos","webhook": "https://n8n.optimizar-ia.com/webhook/iibb_riesco",                 "report_name": "IIBB"},
+    {"label": "Generar reporte de Pagos a Profesionales",    "webhook": "https://n8n.optimizar-ia.com/webhook/informes_de_pagos_riesco",     "report_name": "PAGOS"},
+    {"label": "Generar reporte de VEP de Sueldos",           "webhook": "https://n8n.optimizar-ia.com/webhook/sueldo_riesco",               "report_name": "SUELDO"},
+    {"label": "Demo",                                        "webhook": WEBHOOK_PROD,                                                        "report_name": "Demo"},
 ]
 
 if "last_result" not in st.session_state:
@@ -119,15 +120,15 @@ if "last_result" not in st.session_state:
 
 st.markdown('<div class="center-block">', unsafe_allow_html=True)
 
-for i, label in enumerate(REPORTS):
+for i, report in enumerate(REPORTS):
     st.markdown('<div class="btn-gap">', unsafe_allow_html=True)
-    clicked = st.button(label, key=f"btn_{i}")
+    clicked = st.button(report["label"], key=f"btn_{i}")
     st.markdown("</div>", unsafe_allow_html=True)
 
     if clicked:
         with st.spinner("Ejecutando proceso"):
             try:
-                result = post_to_n8n(label)
+                result = post_to_n8n(report["report_name"], webhook_url=report["webhook"])
             except requests.RequestException as e:
                 result = {"status": "failed", "message": f"Error enviando POST a n8n: {e}"}
             except Exception as e:
